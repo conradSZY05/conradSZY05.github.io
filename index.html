@@ -1,12 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>My Projects</title>
+</head>
 <body>
-<button onclick="document.getElementById('results').style.display='block'">
-    Show Results
-</button>
+  <h1>My Projects</h1>
+  <p>A single button shows the latest scraper results.</p>
 
-<div id="results" style="display:none;">
-    <!-- Your generated table goes here -->
-</div>
+  <button id="show-btn">Show Results</button>
+  <div id="table-container" style="margin-top: 1rem;"></div>
+
+  <script>
+    document.getElementById('show-btn').addEventListener('click', async () => {
+      const container = document.getElementById('table-container');
+
+      // Fetch the generated results.html from the repo root (must exist in repo)
+      try {
+        const resp = await fetch('results.html');
+        if (!resp.ok) {
+          container.innerText = 'No results found. Run the scraper to generate results.html and push it to the repo.';
+          return;
+        }
+        const html = await resp.text();
+
+        // Put the table HTML inside the container.
+        // results.html should contain only the <table> or a wrapper you want to show.
+        container.innerHTML = html;
+      } catch (err) {
+        container.innerText = 'Error fetching results: ' + err;
+      }
+    });
+  </script>
 </body>
 </html>
